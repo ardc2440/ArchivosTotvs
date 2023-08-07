@@ -22,8 +22,8 @@ namespace Totvs.FlatFileGenerator.Services
         // Cron settings
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
-        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, 
-            IOptions<ScheduleSettings> scheduleSettings, 
+        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger,
+            IOptions<ScheduleSettings> scheduleSettings,
             IOrderService orderService,
             IFlatFileProcessor flatFileProcessor)
         {
@@ -37,9 +37,9 @@ namespace Totvs.FlatFileGenerator.Services
         }
         protected override async Task ExecuteAsync(CancellationToken ct)
         {
-            try
+            while (!ct.IsCancellationRequested)
             {
-                while (!ct.IsCancellationRequested)
+                try
                 {
                     var now = DateTime.Now;
                     var nextrun = _schedule.GetNextOccurrence(now);
@@ -50,10 +50,10 @@ namespace Totvs.FlatFileGenerator.Services
                     }
                     await Task.Delay(TimeSpan.FromSeconds(_scheduleSettings.DelayInSeconds), ct);
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error al ejecutar BackgroundWorkerService con excepción {ex.Message}.");
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error al ejecutar BackgroundWorkerService con excepción {ex.Message}.");
+                }
             }
         }
         async Task ProcessAsync(CancellationToken ct)
