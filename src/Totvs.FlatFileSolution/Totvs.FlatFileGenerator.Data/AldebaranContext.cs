@@ -12,8 +12,6 @@ namespace Totvs.FlatFileGenerator.Data
         {
         }
 
-
-
         #region config
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

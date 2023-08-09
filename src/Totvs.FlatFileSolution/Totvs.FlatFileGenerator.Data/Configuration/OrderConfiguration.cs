@@ -23,8 +23,8 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
             builder.Property(e => e.OrderDate).HasColumnName("FECHACREACION");
             builder.Property(e => e.CustomerNotes).HasColumnName("OBSERVACIONESCLIENTE").HasMaxLength(250);
 
-            //builder.HasOne(d => d.Client).WithMany(p => p.Orders)
-            //    .HasForeignKey(d => d.ClientId);
+            builder.HasOne(d => d.Client).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.ClientId);
         }
     }
 }

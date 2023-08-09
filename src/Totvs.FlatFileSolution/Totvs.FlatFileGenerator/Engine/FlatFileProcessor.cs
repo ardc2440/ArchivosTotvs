@@ -24,7 +24,7 @@ namespace Totvs.FlatFileGenerator.Engine
         {
             var csvConfig = new CsvConfiguration(cultureInfo: CultureInfo.InvariantCulture)
             {
-                Delimiter = _settings.Delimiter
+                Delimiter = _settings.Delimiter,
             };
             string destinationPath = Path.Combine(_settings.DestinationFilePath, "file.txt");
             using (var writer = new StreamWriter(destinationPath))
