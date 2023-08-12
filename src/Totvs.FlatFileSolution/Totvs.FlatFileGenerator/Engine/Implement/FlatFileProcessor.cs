@@ -42,7 +42,6 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                     csv.Context.RegisterClassMap<SaleOrderHeaderMap>();
                     var header = (SaleOrderHeader)saleOrder;
                     csv.WriteRecord(header);
-                    writer.WriteLine();
                     csv.Context.RegisterClassMap<SaleOrderDetailMap>();
                     csv.WriteRecords(saleOrder.Details);
                 }
