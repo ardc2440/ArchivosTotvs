@@ -2,9 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
-using Totvs.FlatFileGenerator.Data.Repositories;
+using Totvs.FlatFileGenerator.Business.Services.Interface;
+using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
-namespace Totvs.FlatFileGenerator.Business.Services
+namespace Totvs.FlatFileGenerator.Business.Services.Implement
 {
     public class OrderService : IOrderService
     {

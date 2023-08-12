@@ -8,10 +8,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
+using Totvs.FlatFileGenerator.Engine.Interface;
 using Totvs.FlatFileGenerator.Engine.Mappers;
 using Totvs.FlatFileGenerator.Models;
 
-namespace Totvs.FlatFileGenerator.Engine
+namespace Totvs.FlatFileGenerator.Engine.Implement
 {
     internal class FlatFileProcessor : IFlatFileProcessor
     {

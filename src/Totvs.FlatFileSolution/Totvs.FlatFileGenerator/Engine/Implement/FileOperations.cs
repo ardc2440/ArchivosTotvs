@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Totvs.FlatFileGenerator.Engine.Interface;
 
-namespace Totvs.FlatFileGenerator.Engine
+namespace Totvs.FlatFileGenerator.Engine.Implement
 {
     internal class FileOperations : IFileOperations
     {

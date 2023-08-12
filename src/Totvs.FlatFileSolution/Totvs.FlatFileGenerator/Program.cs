@@ -6,10 +6,13 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Totvs.FlatFileGenerator.Business.Services;
+using Totvs.FlatFileGenerator.Business.Services.Implement;
+using Totvs.FlatFileGenerator.Business.Services.Interface;
 using Totvs.FlatFileGenerator.Data;
-using Totvs.FlatFileGenerator.Data.Repositories;
-using Totvs.FlatFileGenerator.Engine;
+using Totvs.FlatFileGenerator.Data.Repositories.Implement;
+using Totvs.FlatFileGenerator.Data.Repositories.Interface;
+using Totvs.FlatFileGenerator.Engine.Implement;
+using Totvs.FlatFileGenerator.Engine.Interface;
 using Totvs.FlatFileGenerator.Models;
 using Totvs.FlatFileGenerator.Services;
 
@@ -54,8 +57,13 @@ internal class Program
 
         // Repositories
         services.AddSingleton<IOrderRepository, OrderRepository>();
+        services.AddSingleton<IDocumentTypeRepository, DocumentTypeRepository>();
+        services.AddSingleton<IShippingProcessRepository, ShippingProcessRepository>();
+
         // Services
         services.AddSingleton<IOrderService, OrderService>();
+        services.AddSingleton<IDocumentTypeService, DocumentTypeService>();
+
         // HostedService
         services.AddHostedService<BackgroundWorkerService>();
     }

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
 
-namespace Totvs.FlatFileGenerator.Engine
+namespace Totvs.FlatFileGenerator.Engine.Interface
 {
     internal interface IFlatFileProcessor
     {

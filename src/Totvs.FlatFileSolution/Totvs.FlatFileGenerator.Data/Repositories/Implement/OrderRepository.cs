@@ -3,10 +3,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Data.Entities;
+using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
-namespace Totvs.FlatFileGenerator.Data.Repositories
+namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
-    public class OrderRepository: IOrderRepository
+    public class OrderRepository : IOrderRepository
     {
         private readonly AldebaranContext _context;
         public OrderRepository(AldebaranContext context)

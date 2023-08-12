@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Totvs.FlatFileGenerator.Data.Entities;
+using Totvs.FlatFileGenerator.Business.Models;
 
-namespace Totvs.FlatFileGenerator.Data.Repositories
+namespace Totvs.FlatFileGenerator.Business.Services.Interface
 {
-    public interface IOrderRepository
+    public interface IOrderService
     {
         Task<Order> Find(string orderNumber, CancellationToken ct = default);
     }
