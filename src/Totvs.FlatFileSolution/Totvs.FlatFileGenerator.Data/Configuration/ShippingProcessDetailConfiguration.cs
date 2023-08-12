@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Data.Entities;
 
 namespace Totvs.FlatFileGenerator.Data.Configuration
@@ -14,7 +9,7 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<ShippingProcessDetail> builder)
         {
             builder
-                .ToTable("ERPShippingProcessDetail")
+                .ToTable("ERPSHIPPINGPROCESSDETAIL")
                 .HasKey(k => k.Id);
 
             builder.Property(e => e.Id).HasColumnName("IDPEDIDO");

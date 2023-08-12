@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Services.Interface;
-using Totvs.FlatFileGenerator.Data.Entities;
 using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
 namespace Totvs.FlatFileGenerator.Business.Services.Implement

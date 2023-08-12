@@ -1,5 +1,4 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Totvs.FlatFileGenerator.Data.Configuration;
 using Totvs.FlatFileGenerator.Data.Entities;
 

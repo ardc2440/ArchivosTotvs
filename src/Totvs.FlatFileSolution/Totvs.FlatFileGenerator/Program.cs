@@ -59,10 +59,12 @@ internal class Program
         services.AddSingleton<IOrderRepository, OrderRepository>();
         services.AddSingleton<IDocumentTypeRepository, DocumentTypeRepository>();
         services.AddSingleton<IShippingProcessRepository, ShippingProcessRepository>();
+        services.AddSingleton<ISaleOrderRepository, SaleOrderRepository>();
 
         // Services
         services.AddSingleton<IOrderService, OrderService>();
         services.AddSingleton<IDocumentTypeService, DocumentTypeService>();
+        services.AddSingleton<ISaleOrderService, SaleOrderService>();
 
         // HostedService
         services.AddHostedService<BackgroundWorkerService>();

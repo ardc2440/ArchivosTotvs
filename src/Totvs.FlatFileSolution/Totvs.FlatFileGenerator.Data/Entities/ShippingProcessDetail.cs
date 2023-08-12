@@ -1,12 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Totvs.FlatFileGenerator.Data.Entities
+﻿namespace Totvs.FlatFileGenerator.Data.Entities
 {
     public class ShippingProcessDetail
     {

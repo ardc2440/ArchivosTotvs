@@ -1,4 +1,6 @@
-﻿namespace Totvs.FlatFileGenerator.Business.Models
+﻿using System;
+
+namespace Totvs.FlatFileGenerator.Business.Models
 {
     public class Order
     {
@@ -16,5 +18,30 @@
                 Status = order.Status
             };
         }
+    }
+
+    public class SaleOrder
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public DateTime Date { get; set; }
+
+        public static implicit operator SaleOrder(Data.Entities.SaleOrder saleOrder)
+        {
+            if (saleOrder == null) return null!;
+            return new SaleOrder
+            {
+                Id = saleOrder.Id,
+                Type = saleOrder.Type,
+                Date = saleOrder.Date
+            };
+        }
+
+        //public static implicit operator List<SaleOrder>(IEnumerable<Data.Entities.SaleOrder> saleOrder)
+        //{
+        //    if (saleOrder == null) return null!;
+        //    var xx = saleOrder.Select(s => (SaleOrder)s);
+        //    return xx.ToList();
+        //}
     }
 }

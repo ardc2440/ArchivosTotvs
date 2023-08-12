@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Data.Entities;
 
 namespace Totvs.FlatFileGenerator.Data.Configuration
@@ -14,12 +9,12 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<PurchaseOrder> builder)
         {
             builder
-                .ToView("ERPPurchaseOrders")
-                .HasNoKey();//.HasKey(k => new { k.Id, k.Type });
+                .ToView("ERPPURCHASEORDERS")
+                .HasNoKey();
 
-            builder.Property(e => e.Id).HasColumnName("PurchaseId");
-            builder.Property(e => e.Type).HasColumnName("ActionType").HasColumnType("CHAR(1)");
-            builder.Property(e => e.Date).HasColumnName("ActionDate");
+            builder.Property(e => e.Id).HasColumnName("PURCHASEID");
+            builder.Property(e => e.Type).HasColumnName("ACTIONTYPE").HasColumnType("CHAR(1)");
+            builder.Property(e => e.Date).HasColumnName("ACTIONDATE");
         }
     }
 }
