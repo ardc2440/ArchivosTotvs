@@ -27,7 +27,8 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
             var csvConfig = new CsvConfiguration(cultureInfo: CultureInfo.InvariantCulture)
             {
                 Delimiter = _settings.Delimiter.ToString(),
-                HasHeaderRecord = false
+                HasHeaderRecord = false,
+                ShouldQuote = (field) => false
             };
             foreach (var saleOrder in saleOrders)
             {
@@ -41,14 +42,14 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                     csv.Context.RegisterClassMap<SaleOrderHeaderMap>();
                     var header = (SaleOrderHeader)saleOrder;
                     csv.WriteRecord(header);
-                    
+                    writer.WriteLine();
                     csv.Context.RegisterClassMap<SaleOrderDetailMap>();
-                    await csv.WriteRecordsAsync(saleOrder.Details, ct);
+                    csv.WriteRecords(saleOrder.Details);
                 }
             }
 
-            
-         
+
+
         }
     }
 }

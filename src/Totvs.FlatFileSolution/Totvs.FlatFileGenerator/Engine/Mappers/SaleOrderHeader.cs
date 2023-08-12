@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Totvs.FlatFileGenerator.Helpers.Extensions;
 
 namespace Totvs.FlatFileGenerator.Engine.Mappers
 {
@@ -27,8 +28,8 @@ namespace Totvs.FlatFileGenerator.Engine.Mappers
                 SaleNumber = detail.SaleNumber,
                 ClientIdentificationType = detail.ClientIdentificationType,
                 ClientIdentificationNumber = detail.ClientIdentificationNumber,
-                CustomerObservations = detail.CustomerObservations,
-                InternalObservations = detail.InternalObservations,
+                CustomerObservations = detail.CustomerObservations.StripNewLines(),
+                InternalObservations = detail.InternalObservations.StripNewLines(),
                 EstimatedDeliveryDate = detail.EstimatedDeliveryDate
             };
         }
