@@ -1,0 +1,25 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Totvs.FlatFileGenerator.Data.Entities;
+using Totvs.FlatFileGenerator.Data.Repositories.Interface;
+
+namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
+{
+    public class SaleOrderDataFileRepository : ISaleOrderDataFileRepository
+    {
+        private readonly AldebaranContext _context;
+        public SaleOrderDataFileRepository(AldebaranContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public async Task<IEnumerable<SaleOrderDataFile>> Get(int saleId, CancellationToken ct = default)
+        {
+            return await _context.SaleOrderDataFiles.Where(w => w.SaleId == saleId).ToListAsync(ct);
+        }
+    }
+}

@@ -20,6 +20,7 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
             builder.Property(e => e.InternalObservations).HasColumnName("INTERNALOBSERVATIONS");
             builder.Property(e => e.EstimatedDeliveryDate).HasColumnName("ESTIMATEDDELIVERYDATE");
             builder.Property(e => e.SaleId).HasColumnName("SALEID");
+            builder.Property(e => e.SaleDetailId).HasColumnName("SALEDETAILID");
             builder.Property(e => e.LineCode).HasColumnName("LINECODE");
             builder.Property(e => e.ItemCode).HasColumnName("ITEMCODE");
             builder.Property(e => e.ReferenceCode).HasColumnName("REFERENCECODE"); 

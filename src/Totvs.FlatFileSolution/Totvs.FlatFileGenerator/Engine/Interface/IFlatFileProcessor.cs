@@ -7,6 +7,6 @@ namespace Totvs.FlatFileGenerator.Engine.Interface
 {
     internal interface IFlatFileProcessor
     {
-        Task BuildFlatFileAsync(IEnumerable<Order> orders, CancellationToken ct = default);
+        Task BuildFlatFileAsync(IEnumerable<SaleOrder> orders, CancellationToken ct = default);
     }
 }

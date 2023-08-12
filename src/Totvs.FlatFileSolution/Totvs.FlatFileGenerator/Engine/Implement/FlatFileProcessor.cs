@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
+using Totvs.FlatFileGenerator.Config;
 using Totvs.FlatFileGenerator.Engine.Interface;
 using Totvs.FlatFileGenerator.Engine.Mappers;
-using Totvs.FlatFileGenerator.Models;
 
 namespace Totvs.FlatFileGenerator.Engine.Implement
 {
@@ -21,19 +22,33 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
         {
             _settings = settings?.Value ?? throw new ArgumentNullException(nameof(IOptions<FileSettings>));
         }
-        public async Task BuildFlatFileAsync(IEnumerable<Order> orders, CancellationToken ct = default)
+        public async Task BuildFlatFileAsync(IEnumerable<SaleOrder> saleOrders, CancellationToken ct = default)
         {
             var csvConfig = new CsvConfiguration(cultureInfo: CultureInfo.InvariantCulture)
             {
-                Delimiter = _settings.Delimiter,
+                Delimiter = _settings.Delimiter.ToString(),
+                HasHeaderRecord = false
             };
-            string destinationPath = Path.Combine(_settings.DestinationFilePath, "file.txt");
-            using (var writer = new StreamWriter(destinationPath))
-            using (var csv = new CsvWriter(writer, csvConfig))
+            foreach (var saleOrder in saleOrders)
             {
-                csv.Context.RegisterClassMap<OrderMap>();
-                await csv.WriteRecordsAsync(orders, ct);
+                if (!saleOrder.Details.Any())
+                    continue;
+                var filename = $"{saleOrder.Details.First().SaleNumber}{saleOrder.Type}_{saleOrder.Date.ToString(Global.DateTimeFormat)}.txt";
+                string destinationPath = Path.Combine(_settings.DestinationFilePath, filename);
+                using (var writer = new StreamWriter(destinationPath))
+                using (var csv = new CsvWriter(writer, csvConfig))
+                {
+                    csv.Context.RegisterClassMap<SaleOrderHeaderMap>();
+                    var header = (SaleOrderHeader)saleOrder;
+                    csv.WriteRecord(header);
+                    
+                    csv.Context.RegisterClassMap<SaleOrderDetailMap>();
+                    await csv.WriteRecordsAsync(saleOrder.Details, ct);
+                }
             }
+
+            
+         
         }
     }
 }

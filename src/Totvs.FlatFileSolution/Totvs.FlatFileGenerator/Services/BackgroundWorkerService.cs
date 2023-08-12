@@ -9,8 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
 using Totvs.FlatFileGenerator.Business.Services.Interface;
+using Totvs.FlatFileGenerator.Config;
 using Totvs.FlatFileGenerator.Engine.Interface;
-using Totvs.FlatFileGenerator.Models;
 
 namespace Totvs.FlatFileGenerator.Services
 {
@@ -68,15 +68,11 @@ namespace Totvs.FlatFileGenerator.Services
         }
         async Task ProcessAsync(CancellationToken ct)
         {
-            var order = await _orderService.Find("0000476095", ct);
-            var dt = await _documentTypeService.Find("P", ct);
             var so = await _saleOrderService.Get(ct);
-            var w = so.Count();
-            ////var SalesDocumentType = await _documentTypeService.Find("P", ct);
-            ////await ProcessAsync(SalesDocumentType, ct);
+            await _flatFileProcessor.BuildFlatFileAsync(so, ct);
 
-            ////var PurchaseDocumentType = await _documentTypeService.Find("O", ct);
-            ////await ProcessAsync(PurchaseDocumentType, ct);            
+
+
         }
 
         ////async Task ProcessAsync(Business.Models.DocumentType documentType, CancellationToken ct)

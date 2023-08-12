@@ -1,4 +1,4 @@
-﻿namespace Totvs.FlatFileGenerator.Models
+﻿namespace Totvs.FlatFileGenerator.Config
 {
     internal class ScheduleSettings
     {

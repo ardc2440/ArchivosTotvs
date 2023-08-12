@@ -8,12 +8,12 @@ using System.IO;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Services.Implement;
 using Totvs.FlatFileGenerator.Business.Services.Interface;
+using Totvs.FlatFileGenerator.Config;
 using Totvs.FlatFileGenerator.Data;
 using Totvs.FlatFileGenerator.Data.Repositories.Implement;
 using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 using Totvs.FlatFileGenerator.Engine.Implement;
 using Totvs.FlatFileGenerator.Engine.Interface;
-using Totvs.FlatFileGenerator.Models;
 using Totvs.FlatFileGenerator.Services;
 
 internal class Program
@@ -60,7 +60,9 @@ internal class Program
         services.AddSingleton<IDocumentTypeRepository, DocumentTypeRepository>();
         services.AddSingleton<IShippingProcessRepository, ShippingProcessRepository>();
         services.AddSingleton<ISaleOrderRepository, SaleOrderRepository>();
+        services.AddSingleton<ISaleOrderDataFileRepository, SaleOrderDataFileRepository>();
 
+        
         // Services
         services.AddSingleton<IOrderService, OrderService>();
         services.AddSingleton<IDocumentTypeService, DocumentTypeService>();

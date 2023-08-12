@@ -1,8 +1,8 @@
-﻿namespace Totvs.FlatFileGenerator.Models
+﻿namespace Totvs.FlatFileGenerator.Config
 {
     internal class FileSettings
     {
-        public string Delimiter { get; set; }
+        public char Delimiter { get; set; }
         public string DestinationFilePath { get; set; }
     }
 }
