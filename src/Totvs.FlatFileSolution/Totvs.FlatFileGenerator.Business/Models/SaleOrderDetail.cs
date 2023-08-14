@@ -2,7 +2,7 @@
 
 namespace Totvs.FlatFileGenerator.Business.Models
 {
-    public class Detail
+    public class SaleOrderDetail
     {
         public string Type { get; set; }
         public string SaleNumber { get; set; }
@@ -19,10 +19,10 @@ namespace Totvs.FlatFileGenerator.Business.Models
         public int Quantity { get; set; }
         public string SaleState { get; set; }
 
-        public static implicit operator Detail(Data.Entities.SaleOrderDataFile saleOrderDataFile)
+        public static implicit operator SaleOrderDetail(Data.Entities.SaleOrderDataFile saleOrderDataFile)
         {
             if (saleOrderDataFile == null) return null!;
-            return new Detail
+            return new SaleOrderDetail
             {
                 Type = saleOrderDataFile.Type,
                 SaleNumber = saleOrderDataFile.SaleNumber,

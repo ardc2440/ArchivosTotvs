@@ -36,19 +36,18 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                     continue;
                 var filename = $"{saleOrder.Details.First().SaleNumber}{saleOrder.Type}_{saleOrder.Date.ToString(Global.DateTimeFormat)}.txt";
                 string destinationPath = Path.Combine(_settings.DestinationFilePath, filename);
+
                 using (var writer = new StreamWriter(destinationPath))
                 using (var csv = new CsvWriter(writer, csvConfig))
                 {
                     csv.Context.RegisterClassMap<SaleOrderHeaderMap>();
                     var header = (SaleOrderHeader)saleOrder;
                     csv.WriteRecord(header);
+                    csv.NextRecord();
                     csv.Context.RegisterClassMap<SaleOrderDetailMap>();
-                    csv.WriteRecords(saleOrder.Details);
+                    await csv.WriteRecordsAsync(saleOrder.Details);
                 }
             }
-
-
-
-        }
+        }                
     }
 }

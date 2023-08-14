@@ -2,7 +2,7 @@
 
 namespace Totvs.FlatFileGenerator.Helpers.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         public static string StripNewLines(this string str)
         {

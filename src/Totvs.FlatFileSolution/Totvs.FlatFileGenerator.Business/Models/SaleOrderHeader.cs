@@ -2,7 +2,7 @@
 using System.Linq;
 using Totvs.FlatFileGenerator.Helpers.Extensions;
 
-namespace Totvs.FlatFileGenerator.Engine.Mappers
+namespace Totvs.FlatFileGenerator.Business.Models
 {
     public class SaleOrderHeader
     {

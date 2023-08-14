@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using Totvs.FlatFileGenerator.Business.Models;
 
 namespace Totvs.FlatFileGenerator.Engine.Mappers
 {

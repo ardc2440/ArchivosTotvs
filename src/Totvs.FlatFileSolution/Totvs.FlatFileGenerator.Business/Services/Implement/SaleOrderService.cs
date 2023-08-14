@@ -28,7 +28,7 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
             {
                 var sodts = await _sodfRepository.Get(s.Id);
                 var so = (SaleOrder)s;
-                so.Details = sodts.Select(s => (Detail)s).ToList();
+                so.Details = sodts.Select(s => (SaleOrderDetail)s).ToList();
                 result.Add(so);
             }
             return result;

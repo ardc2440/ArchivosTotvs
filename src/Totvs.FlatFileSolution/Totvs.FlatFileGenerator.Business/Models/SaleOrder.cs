@@ -8,7 +8,7 @@ namespace Totvs.FlatFileGenerator.Business.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public DateTime Date { get; set; }
-        public IEnumerable<Detail> Details { get; set; }
+        public IEnumerable<SaleOrderDetail> Details { get; set; }
 
         public static implicit operator SaleOrder(Data.Entities.SaleOrder saleOrder)
         {

@@ -3,7 +3,7 @@ using Totvs.FlatFileGenerator.Business.Models;
 
 namespace Totvs.FlatFileGenerator.Engine.Mappers
 {
-    public class SaleOrderDetailMap : ClassMap<Detail>
+    public class SaleOrderDetailMap : ClassMap<SaleOrderDetail>
     {
         public SaleOrderDetailMap()
         {

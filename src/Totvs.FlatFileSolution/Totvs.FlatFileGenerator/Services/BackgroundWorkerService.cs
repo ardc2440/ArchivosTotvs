@@ -68,12 +68,22 @@ namespace Totvs.FlatFileGenerator.Services
         }
         async Task ProcessAsync(CancellationToken ct)
         {
+            await ProcessAsyncSalesOrders(ct);
+            await ProcessAsyncPurchaseOrders(ct);            
+        }
+
+        async Task ProcessAsyncSalesOrders(CancellationToken ct)
+        {
             var so = await _saleOrderService.Get(ct);
             await _flatFileProcessor.BuildFlatFileAsync(so, ct);
-
-
-
         }
+        async Task ProcessAsyncPurchaseOrders(CancellationToken ct)
+        {
+            var so = await _saleOrderService.Get(ct);
+            await _flatFileProcessor.BuildFlatFileAsync(so, ct);
+        }
+
+
 
         ////async Task ProcessAsync(Business.Models.DocumentType documentType, CancellationToken ct)
         ////{
@@ -85,7 +95,7 @@ namespace Totvs.FlatFileGenerator.Services
 
         ////    //var order = await _orderService.Find("0000476095", ct);
         ////    //var l = new List<Order> { order };
-            
+
         ////    //await _flatFileProcessor.BuildFlatFileAsync(l, ct);
 
         ////    documentType.LastExecutionDate = DateTime.Now;
