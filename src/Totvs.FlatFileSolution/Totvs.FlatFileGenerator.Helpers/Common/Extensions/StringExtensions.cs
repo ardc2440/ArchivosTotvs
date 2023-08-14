@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Totvs.FlatFileGenerator.Helpers.Extensions
+namespace Totvs.FlatFileGenerator.Infrastructure.Common.Extensions
 {
     public static class StringExtensions
     {

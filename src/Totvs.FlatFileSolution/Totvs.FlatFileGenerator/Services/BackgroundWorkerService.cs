@@ -73,14 +73,19 @@ namespace Totvs.FlatFileGenerator.Services
         }
 
         async Task ProcessAsyncSalesOrders(CancellationToken ct)
-        {
+        {            
             var so = await _saleOrderService.Get(ct);
+            var fechaUltProceso = DateTime.Now;
+
             await _flatFileProcessor.BuildFlatFileAsync(so, ct);
+
+
+
         }
         async Task ProcessAsyncPurchaseOrders(CancellationToken ct)
         {
             var so = await _saleOrderService.Get(ct);
-            await _flatFileProcessor.BuildFlatFileAsync(so, ct);
+            //await _flatFileProcessor.BuildFlatFileAsync(so, ct);
         }
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Totvs.FlatFileGenerator.Helpers.Extensions;
+using Totvs.FlatFileGenerator.Infrastructure.Common.Extensions;
 
 namespace Totvs.FlatFileGenerator.Business.Models
 {
@@ -13,7 +13,7 @@ namespace Totvs.FlatFileGenerator.Business.Models
         public string ClientIdentificationNumber { get; set; }
         public string CustomerObservations { get; set; }
         public string InternalObservations { get; set; }
-        public DateTime EstimatedDeliveryDate { get; set; }
+        public string EstimatedDeliveryDate { get; set; }
 
         public static implicit operator SaleOrderHeader(Business.Models.SaleOrder saleOrder)
         {
@@ -30,7 +30,7 @@ namespace Totvs.FlatFileGenerator.Business.Models
                 ClientIdentificationNumber = detail.ClientIdentificationNumber,
                 CustomerObservations = detail.CustomerObservations.StripNewLines(),
                 InternalObservations = detail.InternalObservations.StripNewLines(),
-                EstimatedDeliveryDate = detail.EstimatedDeliveryDate
+                EstimatedDeliveryDate = detail.EstimatedDeliveryDate.ToString("yyyyMMdd")
             };
         }
     }

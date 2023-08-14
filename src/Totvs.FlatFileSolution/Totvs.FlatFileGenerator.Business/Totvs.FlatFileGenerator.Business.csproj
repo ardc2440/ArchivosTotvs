@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Totvs.FlatFileGenerator.Data\Totvs.FlatFileGenerator.Data.csproj" />
-    <ProjectReference Include="..\Totvs.FlatFileGenerator.Helpers\Totvs.FlatFileGenerator.Helpers.csproj" />
+    <ProjectReference Include="..\Totvs.FlatFileGenerator.Helpers\Totvs.FlatFileGenerator.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
