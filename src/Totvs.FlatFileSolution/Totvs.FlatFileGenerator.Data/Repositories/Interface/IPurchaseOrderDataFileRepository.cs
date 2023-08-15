@@ -5,9 +5,8 @@ using Totvs.FlatFileGenerator.Data.Entities;
 
 namespace Totvs.FlatFileGenerator.Data.Repositories.Interface
 {
-    public interface IShippingProcessRepository
+    public interface IPurchaseOrderDataFileRepository
     {
-        Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default);
-        Task<ShippingProcess> Add(ShippingProcess entity);        
+        Task<IEnumerable<PurchaseOrderDataFile>> Get(int purchaseId, CancellationToken ct = default);
     }
 }

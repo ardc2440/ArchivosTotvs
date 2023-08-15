@@ -5,8 +5,11 @@ using Totvs.FlatFileGenerator.Business.Models;
 
 namespace Totvs.FlatFileGenerator.Engine.Interface
 {
-    internal interface IFlatFileProcessor
+    public interface IFlatFileProcessor
     {
+        ShippingProcess ActualShippingProcess { get; set; }
         Task BuildFlatFileAsync(IEnumerable<SaleOrder> saleOrders, CancellationToken ct = default);
+        Task BuildFlatFileAsync(IEnumerable<PurchaseOrder> purchaseOrders, CancellationToken ct = default);
+        string FileDirectory();
     }
 }

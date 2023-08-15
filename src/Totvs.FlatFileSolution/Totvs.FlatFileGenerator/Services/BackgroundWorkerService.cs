@@ -4,10 +4,12 @@ using Microsoft.Extensions.Options;
 using NCrontab;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
+using Totvs.FlatFileGenerator.Business.Services.Implement;
 using Totvs.FlatFileGenerator.Business.Services.Interface;
 using Totvs.FlatFileGenerator.Config;
 using Totvs.FlatFileGenerator.Engine.Interface;
@@ -18,20 +20,29 @@ namespace Totvs.FlatFileGenerator.Services
     {
         private readonly ILogger<BackgroundWorkerService> _logger;
         private readonly IOrderService _orderService;
-        private readonly IDocumentTypeService _documentTypeService;
+        private readonly ILastDocumentTypeProcessService _lastDocumentTypeProcessService;
         private readonly ISaleOrderService _saleOrderService;
+        private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly IShippingProcessService _shippingProcessService;
+
 
         private readonly ScheduleSettings _scheduleSettings;
         private readonly IFlatFileProcessor _flatFileProcessor;
         // Cron settings
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
+
+        internal IEnumerable<SaleOrder> _so { get; set; }
+        internal IEnumerable<PurchaseOrder> _po { get; set; }
+
         public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger,
             IOptions<ScheduleSettings> scheduleSettings,
             IOrderService orderService,
             IFlatFileProcessor flatFileProcessor,
-            IDocumentTypeService documentTypeService,
-            ISaleOrderService saleOrderService)
+            ILastDocumentTypeProcessService lastDocumentTypeProcessService,
+            ISaleOrderService saleOrderService,
+            IPurchaseOrderService purchaseOrderService,
+            IShippingProcessService shippingProcessService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(ILogger<BackgroundWorkerService>));
             _scheduleSettings = scheduleSettings?.Value ?? throw new ArgumentNullException(nameof(IOptions<ScheduleSettings>));
@@ -42,8 +53,9 @@ namespace Totvs.FlatFileGenerator.Services
 
             _schedule = CrontabSchedule.Parse(_scheduleSettings.Timing, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
-            _documentTypeService = documentTypeService;
-            
+            _lastDocumentTypeProcessService = lastDocumentTypeProcessService;
+            _purchaseOrderService = purchaseOrderService;
+            _shippingProcessService = shippingProcessService;
         }
         protected override async Task ExecuteAsync(CancellationToken ct)
         {
@@ -66,49 +78,54 @@ namespace Totvs.FlatFileGenerator.Services
                 }
             }
         }
-        async Task ProcessAsync(CancellationToken ct)
+
+        async Task<ShippingProcess> GetActualProcessAsync(CancellationToken ct)
         {
+            _so = await _saleOrderService.Get(ct);
+            _po = await _purchaseOrderService.Get(ct);
+
+            if (!_so.Any() && !_po.Any())
+                return null;
+
+            _flatFileProcessor.ActualShippingProcess = await _shippingProcessService.Add(new ShippingProcess() { Date = DateTime.Now, Path = _flatFileProcessor.FileDirectory() });
+
+            return _flatFileProcessor.ActualShippingProcess;
+        }
+
+        async Task ProcessAsync(CancellationToken ct)
+        {            
+            if (await GetActualProcessAsync(ct) == null)
+                return;
+            
             await ProcessAsyncSalesOrders(ct);
             await ProcessAsyncPurchaseOrders(ct);            
         }
 
         async Task ProcessAsyncSalesOrders(CancellationToken ct)
-        {            
-            var so = await _saleOrderService.Get(ct);
-            var fechaUltProceso = DateTime.Now;
+        {
+            if (!_so.Any())
+                return;
 
-            await _flatFileProcessor.BuildFlatFileAsync(so, ct);
+            var fechaUltProceso = DateTime.Now;           
 
-
-
+            await _flatFileProcessor.BuildFlatFileAsync(_so, ct);
+            
+            var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("P", ct);
+            lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
+            await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
         }
         async Task ProcessAsyncPurchaseOrders(CancellationToken ct)
         {
-            var so = await _saleOrderService.Get(ct);
-            //await _flatFileProcessor.BuildFlatFileAsync(so, ct);
+            if (!_po.Any())
+                return;
+
+            var fechaUltProceso = DateTime.Now;
+            
+            await _flatFileProcessor.BuildFlatFileAsync(_po, ct);
+            
+            var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("O", ct);
+            lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
+            await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
         }
-
-
-
-        ////async Task ProcessAsync(Business.Models.DocumentType documentType, CancellationToken ct)
-        ////{
-
-        ////    //Obtener Datos de la Vista segun el documentType
-        ////    //retornarlos en una lista
-        ////    //invocar a await _flatFileProcessor.BuildFlatFileAsync(l, ct); enviando la lista 
-        ////    //actualizar LasExecutionDate de documentType con la fecha actual
-
-        ////    //var order = await _orderService.Find("0000476095", ct);
-        ////    //var l = new List<Order> { order };
-
-        ////    //await _flatFileProcessor.BuildFlatFileAsync(l, ct);
-
-        ////    documentType.LastExecutionDate = DateTime.Now;
-        ////    _documentTypeService.Update(documentType);
-
-        ////    Console.WriteLine("hello world " + DateTime.Now.ToString("F") + " LastExecutionDate: " + documentType.LastExecutionDate);
-
-        ////}
-
     }
 }

@@ -55,18 +55,22 @@ internal class Program
         services.AddSingleton<IFileOperations, FileOperations>();
         services.AddSingleton<IFlatFileProcessor, FlatFileProcessor>();
 
+        // Services
+        services.AddSingleton<IOrderService, OrderService>();
+        services.AddSingleton<ILastDocumentTypeProcessService, LastDocumentTypeProcessService>();
+        services.AddSingleton<ISaleOrderService, SaleOrderService>();
+        services.AddSingleton<IPurchaseOrderService, PurchaseOrderService>();
+        services.AddSingleton<IShippingProcessService, ShippingProcessService>();
+
         // Repositories
         services.AddSingleton<IOrderRepository, OrderRepository>();
         services.AddSingleton<IDocumentTypeRepository, DocumentTypeRepository>();
-        services.AddSingleton<IShippingProcessRepository, ShippingProcessRepository>();
         services.AddSingleton<ISaleOrderRepository, SaleOrderRepository>();
         services.AddSingleton<ISaleOrderDataFileRepository, SaleOrderDataFileRepository>();
-
-        
-        // Services
-        services.AddSingleton<IOrderService, OrderService>();
-        services.AddSingleton<IDocumentTypeService, DocumentTypeService>();
-        services.AddSingleton<ISaleOrderService, SaleOrderService>();
+        services.AddSingleton<IPurchaseOrderRepository, PurchaseOrderRepository>();
+        services.AddSingleton<IPurchaseOrderDataFileRepository, PurchaseOrderDataFileRepository>();
+        services.AddSingleton<IShippingProcessRepository, ShippingProcessRepository>();
+        services.AddSingleton<IShippingProcessDetailRepository, ShippingProcessDetailRepository>();
 
         // HostedService
         services.AddHostedService<BackgroundWorkerService>();

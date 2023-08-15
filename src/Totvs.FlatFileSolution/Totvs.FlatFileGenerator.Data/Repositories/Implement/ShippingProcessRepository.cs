@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Totvs.FlatFileGenerator.Data.Entities;
 using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
 namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
@@ -9,6 +14,18 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
         public ShippingProcessRepository(AldebaranContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-        }        
+        }
+
+        public async Task<ShippingProcess> Add(ShippingProcess entity)
+        {
+            _context.ShippingProcesses.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default)
+        {
+            return await _context.ShippingProcesses.ToListAsync(ct);
+        }
     }
 }

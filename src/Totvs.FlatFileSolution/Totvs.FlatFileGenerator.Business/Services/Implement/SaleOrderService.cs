@@ -21,25 +21,14 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
         public async Task<IEnumerable<SaleOrder>> Get(CancellationToken ct = default)
         {
             var saleOrders = await _soRepository.Get(ct);
-            var saleOrderData = saleOrders.Where(s => s.Id == 552978); //temp
-
-            var result = new List<SaleOrder>();
-            foreach (var s in saleOrderData)
+            
+            return saleOrders.Select(async s =>
             {
-                var sodts = await _sodfRepository.Get(s.Id);
+                var sodts = await _sodfRepository.Get(s.Id, ct);
                 var so = (SaleOrder)s;
-                so.Details = sodts.Select(s => (SaleOrderDetail)s).ToList();
-                result.Add(so);
-            }
-            return result;
-            //var xx= saleOrderData.Select(async s =>
-            //{
-            //    var sodts = await _sodfRepository.Get(s.Id, ct);
-            //    var so = (SaleOrder)s;
-            //    so.Details = sodts.Select(s => (Detail)s);
-            //    return so;
-            //});
-            //return xx.Select(s => s.Result);
+                so.Details = sodts.Select(s => (SaleOrderDetail)s);
+                return so;
+            }).Select(s => s.Result);
         }
     }
 }

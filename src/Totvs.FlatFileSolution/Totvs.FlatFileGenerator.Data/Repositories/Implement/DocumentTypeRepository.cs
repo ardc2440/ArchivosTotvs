@@ -24,10 +24,10 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
             return await _context.DocumentTypes.FirstOrDefaultAsync(dt => dt.Id == id, ct);
         }
 
-        public void Update(DocumentType entity)
+        public async Task Update(DocumentType entity)
         {
-            _context.DocumentTypes.Update(entity) ;
-            _context.SaveChanges() ;
+            _context.DocumentTypes.Update(entity);
+            await _context.SaveChangesAsync() ;
         }        
     }
 }

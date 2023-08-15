@@ -8,6 +8,6 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Interface
     {
         Task<DocumentType> Find(string type, CancellationToken ct = default);
         Task<DocumentType> Find(int id, CancellationToken ct = default);
-        void Update(DocumentType entity);
+        Task Update(DocumentType entity);
     }
 }
