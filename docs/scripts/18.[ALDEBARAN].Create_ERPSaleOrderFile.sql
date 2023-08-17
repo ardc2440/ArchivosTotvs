@@ -1,0 +1,11 @@
+Create VIew ERPSaleOrderFile
+AS
+SELECT 'P' DocumentType, p.NUMPEDIDO SaleNumber, t.CODTIPIDENTIFICA ClientIdentificationType, c.NUMIDENTIFICA ClientIdentificationNumber, p.OBSERVACIONESCLIENTE CustomerObservations, p.OBSERVACIONES InternalObservations, 
+       P.FECHAESTENTREGA EstimatedDeliveryDate, p.IDPEDIDO SaleId, ip.IDITEMPEDIDO SaleDetailId, i.CODLINEA LineCode, i.REFINTERNA ItemCode, i.REFITEMXCOLOR ReferenceCode, ip.CANTIDADENT DeliveryQuantity, ip.CANTIDAD RequestedQuantity, p.ESTADO SaleState
+  FROM PEDIDOS p
+  JOIN CLIENTES c ON c.IDCLIENTE = p.IDCLIENTE
+  JOIN TIPIDENTIFICA t ON t.IDTIPIDENTIFICA = c.IDTIPIDENTIFICA
+  JOIN ITEMPEDIDO ip ON ip.IDPEDIDO = p.IDPEDIDO
+  JOIN ERPItems i ON i.IDITEMXCOLOR = ip.IDITEMXCOLOR  
+ WHERE EXISTS (SELECT 1 FROM ERPSaleOrders ep WHERE ep.SaleId = p.IDPEDIDO)
+ ORDER BY SaleId, SaleDetailId;   

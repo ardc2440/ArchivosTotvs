@@ -52,7 +52,6 @@ internal class Program
         });
 
         // Engines
-        services.AddSingleton<IFileOperations, FileOperations>();
         services.AddSingleton<IFlatFileProcessor, FlatFileProcessor>();
 
         // Services

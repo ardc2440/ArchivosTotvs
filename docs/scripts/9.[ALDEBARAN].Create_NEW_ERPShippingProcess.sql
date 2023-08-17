@@ -1,0 +1,8 @@
+SET TERM ^ ;
+CREATE TRIGGER NEW_ERPShippingProcess FOR ERPShippingProcess
+ACTIVE BEFORE INSERT POSITION 0
+AS  
+BEGIN   
+    New.ID = GEN_ID(GEN_ERPShippingProcess,1);
+END^
+SET TERM ; ^
