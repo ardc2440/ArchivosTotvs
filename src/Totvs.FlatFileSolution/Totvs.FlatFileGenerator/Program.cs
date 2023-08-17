@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -34,11 +36,17 @@ internal class Program
     {
         // Config
         var appsettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
-        var appsettingsDevFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.Development.json");
         IConfiguration config = new ConfigurationBuilder()
            .AddJsonFile(appsettingsFilePath, true, true)
-           .AddJsonFile(appsettingsDevFilePath, optional: true, reloadOnChange: true)
            .Build();
+        // Logging
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+            loggingBuilder.AddNLog(config);
+        });
+
         services.AddSingleton(config);
         services.AddOptions();
 
