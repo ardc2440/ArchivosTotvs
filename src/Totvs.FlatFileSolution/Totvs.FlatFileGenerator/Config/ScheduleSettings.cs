@@ -2,7 +2,9 @@
 {
     internal class ScheduleSettings
     {
-        public string Timing { get; set; }
-        public int DelayInSeconds { get; set; }
+        public string ExecuteTiming { get; set; }
+        public int ExecuteDelayInSeconds { get; set; }
+        public string CleaningTiming { get; set; }
+        public int CleaningDelayInDays { get; set; }
     }
 }

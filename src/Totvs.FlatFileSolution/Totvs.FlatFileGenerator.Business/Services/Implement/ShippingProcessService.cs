@@ -47,6 +47,11 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
             return (ShippingProcessDetail)result;
         }
 
+        public async Task CleaningShippingDataProcess(DateTime newCleaningDate, CancellationToken ct = default)
+        {
+            await _spRepository.CleaningShippingDataProcess(newCleaningDate); 
+        }
+
         public async Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default)
         {
             var shippingProcess = await _spRepository.Get(ct);

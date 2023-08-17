@@ -73,6 +73,7 @@ internal class Program
         services.AddSingleton<IShippingProcessDetailRepository, ShippingProcessDetailRepository>();
 
         // HostedService
-        services.AddHostedService<BackgroundWorkerService>();
+        services.AddHostedService<BackgroundShippingService>();
+        services.AddHostedService<BackgroundCleaningService>();
     }
 }

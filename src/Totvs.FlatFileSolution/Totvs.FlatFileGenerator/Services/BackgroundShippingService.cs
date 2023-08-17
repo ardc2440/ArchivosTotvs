@@ -16,9 +16,9 @@ using Totvs.FlatFileGenerator.Engine.Interface;
 
 namespace Totvs.FlatFileGenerator.Services
 {
-    internal class BackgroundWorkerService : BackgroundService
+    internal partial class BackgroundShippingService : BackgroundService
     {
-        private readonly ILogger<BackgroundWorkerService> _logger;
+        private readonly ILogger<BackgroundShippingService> _logger;
         private readonly IOrderService _orderService;
         private readonly ILastDocumentTypeProcessService _lastDocumentTypeProcessService;
         private readonly ISaleOrderService _saleOrderService;
@@ -35,7 +35,7 @@ namespace Totvs.FlatFileGenerator.Services
         internal IEnumerable<SaleOrder> _so { get; set; }
         internal IEnumerable<PurchaseOrder> _po { get; set; }
 
-        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger,
+        public BackgroundShippingService(ILogger<BackgroundShippingService> logger,
             IOptions<ScheduleSettings> scheduleSettings,
             IOrderService orderService,
             IFlatFileProcessor flatFileProcessor,
@@ -44,14 +44,13 @@ namespace Totvs.FlatFileGenerator.Services
             IPurchaseOrderService purchaseOrderService,
             IShippingProcessService shippingProcessService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(ILogger<BackgroundWorkerService>));
+            _logger = logger ?? throw new ArgumentNullException(nameof(ILogger<BackgroundShippingService>));
             _scheduleSettings = scheduleSettings?.Value ?? throw new ArgumentNullException(nameof(IOptions<ScheduleSettings>));
             _orderService = orderService ?? throw new ArgumentNullException(nameof(IOrderService));
             _flatFileProcessor = flatFileProcessor ?? throw new ArgumentNullException(nameof(IFlatFileProcessor));
             _saleOrderService = saleOrderService ?? throw new ArgumentNullException(nameof(ISaleOrderService));
 
-
-            _schedule = CrontabSchedule.Parse(_scheduleSettings.Timing, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+            _schedule = CrontabSchedule.Parse(_scheduleSettings.ExecuteTiming, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
             _lastDocumentTypeProcessService = lastDocumentTypeProcessService;
             _purchaseOrderService = purchaseOrderService;
@@ -70,11 +69,11 @@ namespace Totvs.FlatFileGenerator.Services
                         await ProcessAsync(ct);
                         _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
                     }
-                    await Task.Delay(TimeSpan.FromSeconds(_scheduleSettings.DelayInSeconds), ct);
+                    await Task.Delay(TimeSpan.FromSeconds(_scheduleSettings.ExecuteDelayInSeconds), ct);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error al ejecutar BackgroundWorkerService con excepción {ex.Message}.");
+                    _logger.LogError(ex, $"Error al ejecutar BackgroundShippingService con excepción {ex.Message}.");
                 }
             }
         }
@@ -93,12 +92,12 @@ namespace Totvs.FlatFileGenerator.Services
         }
 
         async Task ProcessAsync(CancellationToken ct)
-        {            
+        {
             if (await GetActualProcessAsync(ct) == null)
                 return;
-            
+
             await ProcessAsyncSalesOrders(ct);
-            await ProcessAsyncPurchaseOrders(ct);            
+            await ProcessAsyncPurchaseOrders(ct);
         }
 
         async Task ProcessAsyncSalesOrders(CancellationToken ct)
@@ -106,10 +105,10 @@ namespace Totvs.FlatFileGenerator.Services
             if (!_so.Any())
                 return;
 
-            var fechaUltProceso = DateTime.Now;           
+            var fechaUltProceso = DateTime.Now;
 
             await _flatFileProcessor.BuildFlatFileAsync(_so, ct);
-            
+
             var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("P", ct);
             lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
             await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
@@ -120,9 +119,9 @@ namespace Totvs.FlatFileGenerator.Services
                 return;
 
             var fechaUltProceso = DateTime.Now;
-            
+
             await _flatFileProcessor.BuildFlatFileAsync(_po, ct);
-            
+
             var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("O", ct);
             lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
             await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
