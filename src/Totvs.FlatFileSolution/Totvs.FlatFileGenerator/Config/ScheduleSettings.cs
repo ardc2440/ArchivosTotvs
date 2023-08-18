@@ -6,5 +6,6 @@
         public int ExecuteDelayInSeconds { get; set; }
         public string CleaningTiming { get; set; }
         public int CleaningDelayInDays { get; set; }
+        public int HistoryDays { get; set; }
     }
 }

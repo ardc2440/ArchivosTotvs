@@ -57,7 +57,7 @@ namespace Totvs.FlatFileGenerator.Services
 
         async Task ProcessAsync(CancellationToken ct)
         {
-            await _shippingProcessService.CleaningShippingDataProcess(DateTime.Now, ct);
+            await _shippingProcessService.CleaningShippingDataProcess(DateTime.Now.AddDays(_scheduleSettings.HistoryDays * -1), ct);
         }
     }
 }
