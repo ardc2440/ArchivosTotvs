@@ -1,0 +1,15 @@
+CREATE VIEW ERPPurchaseOrders
+AS
+SELECT IDORDEN PurchaseId, ActionType ActionType, FECHACREACION ActionDate 
+  FROM (SELECT 'C' ActionType, IDORDEN, FECHACREACION
+          FROM ORDENES
+        Union 
+        SELECT 'M', IDORDEN, MAX(FECHA) 
+          FROM MODORDENES
+         GROUP BY IDORDEN
+		union 
+		SELECT 'X', d.IDORDEN, MAX(d.FECHADEV) 
+          FROM DEVOLORDEN d
+         GROUP BY IDORDEN) AS ORDENES
+ WHERE FECHACREACION > (select a.LASTEXECUTIONDATE from ERPDOCUMENTTYPE A WHERE A.CODETYPE = 'O')
+ ORDER BY PurchaseId, ActionType, ActionDate;
