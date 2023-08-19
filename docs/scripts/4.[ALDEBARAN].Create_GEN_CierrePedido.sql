@@ -1,1 +1,0 @@
-CREATE GENERATOR GEN_CierrePedido;
