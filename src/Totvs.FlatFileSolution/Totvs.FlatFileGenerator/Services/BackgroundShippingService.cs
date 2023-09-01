@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Totvs.FlatFileGenerator.Business.Models;
-using Totvs.FlatFileGenerator.Business.Services.Implement;
 using Totvs.FlatFileGenerator.Business.Services.Interface;
 using Totvs.FlatFileGenerator.Config;
 using Totvs.FlatFileGenerator.Engine.Interface;

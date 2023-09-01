@@ -6,6 +6,8 @@ namespace Totvs.FlatFileGenerator.Infrastructure.Common.Extensions
     {
         public static string StripNewLines(this string str)
         {
+            if (str == null)
+                return "";
             return Regex.Replace(str, @"\r\n?|\n", " ");
         }
     }
