@@ -79,11 +79,17 @@ namespace Totvs.FlatFileGenerator.Services
 
         async Task<ShippingProcess> GetActualProcessAsync(CancellationToken ct)
         {
+            _logger.LogInformation($"Valida existencia de información para envío");
+
             _so = await _saleOrderService.Get(ct);
             _po = await _purchaseOrderService.Get(ct);
 
             if (!_so.Any() && !_po.Any())
+            {
+                _logger.LogInformation($"no existe informacion para envío");
+
                 return null;
+            }
 
             _flatFileProcessor.ActualShippingProcess = await _shippingProcessService.Add(new ShippingProcess() { Date = DateTime.Now, Path = _flatFileProcessor.FileDirectory() });
 
@@ -104,6 +110,8 @@ namespace Totvs.FlatFileGenerator.Services
             if (!_so.Any())
                 return;
 
+            _logger.LogInformation($"Generando archivos para Pedidos {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
             var fechaUltProceso = DateTime.Now;
 
             await _flatFileProcessor.BuildFlatFileAsync(_so, ct);
@@ -111,11 +119,16 @@ namespace Totvs.FlatFileGenerator.Services
             var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("P", ct);
             lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
             await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
+
+            _logger.LogInformation($"Finaliza generación archivos para pedidos {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
         }
         async Task ProcessAsyncPurchaseOrders(CancellationToken ct)
         {
             if (!_po.Any())
                 return;
+
+            _logger.LogInformation($"Generando archivos para ordenes de compra {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
 
             var fechaUltProceso = DateTime.Now;
 
@@ -124,6 +137,9 @@ namespace Totvs.FlatFileGenerator.Services
             var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("O", ct);
             lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
             await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
+
+            _logger.LogInformation($"Finaliza generación de archivos para ordenes de compra {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
         }
     }
 }

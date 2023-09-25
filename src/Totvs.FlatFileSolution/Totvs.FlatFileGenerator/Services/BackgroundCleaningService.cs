@@ -46,7 +46,7 @@ namespace Totvs.FlatFileGenerator.Services
                         await ProcessAsync(ct);
                         _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
                     }
-                    await Task.Delay(TimeSpan.FromDays(_scheduleSettings.CleaningDelayInDays), ct);
+                    await Task.Delay(TimeSpan.FromSeconds(_scheduleSettings.CleaningDelayInDays), ct);
                 }
                 catch (Exception ex)
                 {
@@ -57,7 +57,12 @@ namespace Totvs.FlatFileGenerator.Services
 
         async Task ProcessAsync(CancellationToken ct)
         {
+            _logger.LogInformation($"Inicio proceso de limpieza desde la fecha {DateTime.Now.AddDays(_scheduleSettings.HistoryDays*-1):MM/dd/yyyy HH:mm:ss}");
+
             await _shippingProcessService.CleaningShippingDataProcess(DateTime.Now.AddDays(_scheduleSettings.HistoryDays * -1), ct);
+
+            _logger.LogInformation($"Fin proceso de limpieza");
+
         }
     }
 }

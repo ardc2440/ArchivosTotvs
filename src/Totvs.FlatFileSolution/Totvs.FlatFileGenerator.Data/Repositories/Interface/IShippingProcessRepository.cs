@@ -10,6 +10,6 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Interface
     {
         Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default);
         Task<ShippingProcess> Add(ShippingProcess entity);
-        Task CleaningShippingDataProcess(DateTime newCleaningDate);
+        Task CleaningShippingDataProcess(DateTime newCleaningDate, CancellationToken ct);
     }
 }

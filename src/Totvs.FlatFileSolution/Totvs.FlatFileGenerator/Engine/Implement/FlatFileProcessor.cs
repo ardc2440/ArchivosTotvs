@@ -58,6 +58,8 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
 
                 try
                 {
+                    _logger.LogInformation($"Generando archivo {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
                     using (var writer = new StreamWriter(destinationPath))
                     using (var csv = new CsvWriter(writer, csvConfig))
                     {
@@ -76,6 +78,8 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                         DocumentId = saleOrder.Id,
                         FileName = filename
                     });
+
+                    _logger.LogInformation($"Fin generación archivo {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
                 }
                 catch (Exception ex)
                 {
@@ -104,6 +108,8 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
 
                 try
                 {
+                    _logger.LogInformation($"Generando archivo {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
                     using (var writer = new StreamWriter(destinationPath))
                     using (var csv = new CsvWriter(writer, csvConfig))
                     {
@@ -122,6 +128,8 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                         DocumentId = purchaseOrder.Id,
                         FileName = filename
                     });
+
+                    _logger.LogInformation($"Fin generación archivo {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
                 }
                 catch (Exception ex)
                 {

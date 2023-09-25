@@ -49,7 +49,7 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
 
         public async Task CleaningShippingDataProcess(DateTime newCleaningDate, CancellationToken ct = default)
         {
-            await _spRepository.CleaningShippingDataProcess(newCleaningDate); 
+            await _spRepository.CleaningShippingDataProcess(newCleaningDate, ct); 
         }
 
         public async Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default)
