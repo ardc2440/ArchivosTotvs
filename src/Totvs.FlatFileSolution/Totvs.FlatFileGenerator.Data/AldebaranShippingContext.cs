@@ -4,9 +4,9 @@ using Totvs.FlatFileGenerator.Data.Entities;
 
 namespace Totvs.FlatFileGenerator.Data
 {
-    public class AldebaranContext : DbContext
+    public class AldebaranShippingContext : DbContext
     {
-        public AldebaranContext(DbContextOptions<AldebaranContext> options)
+        public AldebaranShippingContext(DbContextOptions<AldebaranShippingContext> options)
             : base(options)
         {
         }

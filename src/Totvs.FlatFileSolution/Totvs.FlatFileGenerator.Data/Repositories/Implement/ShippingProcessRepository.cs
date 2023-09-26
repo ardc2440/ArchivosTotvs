@@ -8,12 +8,15 @@ using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
 namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
-    public class ShippingProcessRepository:IShippingProcessRepository
+    public class ShippingProcessRepository : IShippingProcessRepository
     {
-        private readonly AldebaranContext _context;
-        public ShippingProcessRepository(AldebaranContext context)
+        private readonly AldebaranShippingContext _context;
+        private readonly AldebaranShippingContext _cleaningContext;
+
+        public ShippingProcessRepository(AldebaranShippingContext context, AldebaranCleaningContext cleaningContext)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _cleaningContext = cleaningContext ?? throw new ArgumentNullException(nameof(cleaningContext));
         }
 
         public async Task<ShippingProcess> Add(ShippingProcess entity)
@@ -25,7 +28,7 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 
         public async Task CleaningShippingDataProcess(DateTime newCleaningDate, CancellationToken ct)
         {
-            await _context.Database.ExecuteSqlRawAsync($"EXECUTE PROCEDURE ERPCLEANINGDATAPROCESS (cast('{newCleaningDate:MM/dd/yyyy HH:mm:ss}' as timestamp));",ct);
+            await _cleaningContext.Database.ExecuteSqlRawAsync($"EXECUTE PROCEDURE ERPCLEANINGDATAPROCESS (cast('{newCleaningDate:MM/dd/yyyy HH:mm:ss}' as timestamp));", ct);
         }
 
         public async Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default)

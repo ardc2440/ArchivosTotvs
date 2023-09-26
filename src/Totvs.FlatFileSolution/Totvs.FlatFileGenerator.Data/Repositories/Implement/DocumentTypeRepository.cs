@@ -9,8 +9,8 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
     public class DocumentTypeRepository: IDocumentTypeRepository
     {
-        private readonly AldebaranContext _context;
-        public DocumentTypeRepository(AldebaranContext context)
+        private readonly AldebaranShippingContext _context;
+        public DocumentTypeRepository(AldebaranShippingContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

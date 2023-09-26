@@ -10,8 +10,8 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
     public class PurchaseOrderRepository : IPurchaseOrderRepository
     {
-        private readonly AldebaranContext _context;
-        public PurchaseOrderRepository(AldebaranContext context)
+        private readonly AldebaranShippingContext _context;
+        public PurchaseOrderRepository(AldebaranShippingContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

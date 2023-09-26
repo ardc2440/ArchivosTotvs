@@ -54,7 +54,12 @@ internal class Program
         services.Configure<ScheduleSettings>(config.GetSection("ScheduleSettings"));
 
         // Context
-        services.AddDbContext<AldebaranContext>(opts =>
+        services.AddDbContext<AldebaranShippingContext>(opts =>
+        {
+            opts.UseFirebird(config.GetConnectionString("AldebaranConnection"));
+        });
+
+        services.AddDbContext<AldebaranCleaningContext>(opts =>
         {
             opts.UseFirebird(config.GetConnectionString("AldebaranConnection"));
         });

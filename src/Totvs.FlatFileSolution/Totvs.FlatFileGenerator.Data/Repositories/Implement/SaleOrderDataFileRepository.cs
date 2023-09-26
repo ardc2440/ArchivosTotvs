@@ -11,8 +11,8 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
     public class SaleOrderDataFileRepository : ISaleOrderDataFileRepository
     {
-        private readonly AldebaranContext _context;
-        public SaleOrderDataFileRepository(AldebaranContext context)
+        private readonly AldebaranShippingContext _context;
+        public SaleOrderDataFileRepository(AldebaranShippingContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
