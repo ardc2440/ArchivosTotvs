@@ -9,19 +9,19 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<ShippingProcessDetail> builder)
         {
             builder
-                .ToTable("ERPSHIPPINGPROCESSDETAIL")
+                .ToTable("erp_shipping_process_detail")
                 .HasKey(k => k.Id);
 
-            builder.Property(e => e.Id).HasColumnName("ID");
-            builder.Property(e => e.ShippingProcessId).HasColumnName("IDERPSHIPPINGPROCESS");
-            builder.Property(e => e.DocumentTypeId).HasColumnName("IDERPDOCUMENTTYPE").HasMaxLength(10);
-            builder.Property(e => e.DocumentId).HasColumnName("IDDOCUMENT");
-            builder.Property(e => e.FileName).HasColumnName("FILENAME");
+            builder.Property(e => e.Id).HasColumnName("ERP_SHIPPING_PROCESS_DETAIL_ID");
+            builder.Property(e => e.ShippingProcessId).HasColumnName("ERP_SHIPPING_PROCESS_ID");
+            builder.Property(e => e.DocumentTypeId).HasColumnName("DOCUMENT_TYPE_ID").HasMaxLength(10);
+            builder.Property(e => e.DocumentId).HasColumnName("DOCUMENT_ID");
+            builder.Property(e => e.FileName).HasColumnName("DOCUMENT_FILE_NAME");
             
             builder.HasOne(d => d.ShippingProcess).WithMany(p => p.ProcessDetails)
                 .HasForeignKey(d => d.ShippingProcessId);
 
-            builder.HasOne(d => d.DocumentType).WithMany(p => p.ProcessDetails)
+            builder.HasOne(d => d.DocumentType).WithMany(p => p.ShippingProcessDetails)
                 .HasForeignKey(d => d.DocumentTypeId);
         }
     }

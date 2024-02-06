@@ -9,7 +9,7 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<PurchaseOrderDataFile> builder)
         {
             builder
-                .ToView("ERPPURCHASEORDERFILE")
+                .ToView("erp_purchase_order_file")
                 .HasNoKey();
 
             builder.Property(e => e.Type).HasColumnName("DOCUMENTTYPE");

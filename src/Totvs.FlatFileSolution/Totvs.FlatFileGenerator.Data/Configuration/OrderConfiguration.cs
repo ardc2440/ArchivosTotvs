@@ -9,22 +9,24 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder
-                .ToTable("PEDIDOS")
-                .HasKey(k => k.Id);
+                .ToTable("customer_orders", "dbo")
+                .HasKey(k => k.Id).HasName("PK_CUSTOMER_ORDER");
 
-            builder.Property(e => e.Id).HasColumnName("IDPEDIDO");
-            builder.Property(e => e.ClientId).HasColumnName("IDCLIENTE");
-            builder.Property(e => e.OrderNumber).HasColumnName("NUMPEDIDO").HasMaxLength(10);
-            builder.Property(e => e.DeliveryDate).HasColumnName("FECHAESTENTREGA");
-            builder.Property(e => e.AgreedDelivery).HasColumnName("ENTREGAPACTADA").HasColumnType("CHAR(1)");
-            builder.Property(e => e.Comments).HasColumnName("OBSERVACIONES").HasMaxLength(250);
-            builder.Property(e => e.StaffId).HasColumnName("IDFUNCIONARIO");
-            builder.Property(e => e.Status).HasColumnName("ESTADO").HasColumnType("CHAR(1)");
-            builder.Property(e => e.OrderDate).HasColumnName("FECHACREACION");
-            builder.Property(e => e.CustomerNotes).HasColumnName("OBSERVACIONESCLIENTE").HasMaxLength(250);
+            builder.Property(e => e.Id).HasColumnName(@"CUSTOMER_ORDER_ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
+            builder.Property(e => e.ClientId).HasColumnName(@"CUSTOMER_ID").HasColumnType("int").IsRequired();
+            builder.Property(e => e.OrderNumber).HasColumnName(@"ORDER_NUMBER").HasColumnType("varchar(10)").IsRequired().IsUnicode(false).HasMaxLength(10); ;
+            builder.Property(e => e.DeliveryDate).HasColumnName(@"ESTIMATED_DELIVERY_DATE").HasColumnType("date").IsRequired();
+            builder.Property(e => e.Comments).HasColumnName(@"INTERNAL_NOTES").HasColumnType("varchar(250)").IsRequired(false).IsUnicode(false).HasMaxLength(250);
+            builder.Property(e => e.StaffId).HasColumnName(@"EMPLOYEE_ID").HasColumnType("int").IsRequired();
+            builder.Property(e => e.Status).HasColumnName(@"STATUS_DOCUMENT_TYPE_ID").HasColumnType("smallint").IsRequired();
+            builder.Property(e => e.OrderDate).HasColumnName(@"CREATION_DATE").HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.CustomerNotes).HasColumnName(@"CUSTOMER_NOTES").HasColumnType("varchar(250)").IsRequired(false).IsUnicode(false).HasMaxLength(250);
 
             builder.HasOne(d => d.Client).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ClientId);
+            builder.HasOne(a => a.Client).WithMany(b => b.Orders).HasForeignKey(c => c.ClientId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_CUSTOMER_ORDER_CUSTOMER");
+            builder.HasOne(a => a.StatusDocumentType).WithMany(b => b.CustomerOrders).HasForeignKey(c => c.Status).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_CUSTOMER_ORDER_STATUS_DOCUMENT_TYPE");
+
         }
     }
 }

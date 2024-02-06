@@ -7,7 +7,7 @@ using Totvs.FlatFileGenerator.Data.Repositories.Interface;
 
 namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 {
-    public class DocumentTypeRepository: IDocumentTypeRepository
+    public class DocumentTypeRepository : IDocumentTypeRepository
     {
         private readonly AldebaranShippingContext _context;
         public DocumentTypeRepository(AldebaranShippingContext context)
@@ -15,19 +15,10 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<DocumentType> Find(string type, CancellationToken ct = default)
+        public async Task<DocumentType?> FindByCodeAsync(string code, CancellationToken ct = default)
         {
-            return await _context.DocumentTypes.FirstOrDefaultAsync(dt => dt.CodeType == type, ct);
+            return await _context.DocumentTypes.AsNoTracking().FirstOrDefaultAsync(f => f.DocumentTypeCode == code, ct);
         }
-        public async Task<DocumentType> Find(int id, CancellationToken ct = default)
-        {
-            return await _context.DocumentTypes.FirstOrDefaultAsync(dt => dt.Id == id, ct);
-        }
-
-        public async Task Update(DocumentType entity)
-        {
-            _context.DocumentTypes.Update(entity);
-            await _context.SaveChangesAsync() ;
-        }        
     }
+
 }

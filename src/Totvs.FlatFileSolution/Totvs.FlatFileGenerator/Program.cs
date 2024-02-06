@@ -76,7 +76,7 @@ internal class Program
 
         // Repositories
         services.AddSingleton<IOrderRepository, OrderRepository>();
-        services.AddSingleton<IDocumentTypeRepository, DocumentTypeRepository>();
+        services.AddSingleton<IErpDocumentTypeRepository, ErpDocumentTypeRepository>();
         services.AddSingleton<ISaleOrderRepository, SaleOrderRepository>();
         services.AddSingleton<ISaleOrderDataFileRepository, SaleOrderDataFileRepository>();
         services.AddSingleton<IPurchaseOrderRepository, PurchaseOrderRepository>();

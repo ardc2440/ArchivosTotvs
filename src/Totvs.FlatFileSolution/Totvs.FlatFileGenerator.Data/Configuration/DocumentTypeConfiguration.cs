@@ -1,22 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Totvs.FlatFileGenerator.Data.Entities;
 
-namespace Totvs.FlatFileGenerator.Data.Configuration
+namespace Totvs.FlatFileGenerator.Data.Entities
 {
-    internal class DocumentTypeConfiguration: IEntityTypeConfiguration<DocumentType>
+    public class DocumentTypeConfiguration : IEntityTypeConfiguration<DocumentType>
     {
         public void Configure(EntityTypeBuilder<DocumentType> builder)
         {
-            builder
-                .ToTable("ERPDOCUMENTTYPE")
-                .HasKey(k => k.Id);
-
-            builder.Property(e => e.Id).HasColumnName("ID");
-            builder.Property(e => e.Name).HasColumnName("NAME");
-            builder.Property(e => e.CodeType).HasColumnName("CODETYPE").HasColumnType("CHAR(1)");
-            builder.Property(e => e.LastExecutionDate).HasColumnName("LASTEXECUTIONDATE");
-            builder.Property(e => e.LastCleaningDate).HasColumnName("LASTCLEANINGDATE");
+            builder.ToTable("document_types", "dbo");
+            builder.HasKey(x => x.DocumentTypeId).HasName("PK_DOCUMENT_TYPE");
+            builder.Property(x => x.DocumentTypeId).HasColumnName(@"DOCUMENT_TYPE_ID").HasColumnType("smallint").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
+            builder.Property(x => x.DocumentTypeName).HasColumnName(@"DOCUMENT_TYPE_NAME").HasColumnType("varchar(30)").IsRequired().IsUnicode(false).HasMaxLength(30);
+            builder.Property(x => x.DocumentTypeCode).HasColumnName(@"DOCUMENT_TYPE_CODE").HasColumnType("char(1)").IsRequired().IsFixedLength().IsUnicode(false).HasMaxLength(1);
+            builder.HasIndex(x => x.DocumentTypeCode).HasDatabaseName("UQ_DOCUMENT_TYPE_CODE").IsUnique();
         }
     }
 }

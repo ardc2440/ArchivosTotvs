@@ -8,8 +8,8 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
 {
     public class LastDocumentTypeProcessService : ILastDocumentTypeProcessService
     {
-        private readonly IDocumentTypeRepository _repository;
-        public LastDocumentTypeProcessService(IDocumentTypeRepository repository)
+        private readonly IErpDocumentTypeRepository _repository;
+        public LastDocumentTypeProcessService(IErpDocumentTypeRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }

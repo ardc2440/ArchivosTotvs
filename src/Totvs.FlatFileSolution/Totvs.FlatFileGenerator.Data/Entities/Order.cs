@@ -8,13 +8,14 @@ namespace Totvs.FlatFileGenerator.Data.Entities
         public int ClientId { get; set; }
         public string OrderNumber { get; set; } = null!;
         public DateTime DeliveryDate { get; set; }
-        public string AgreedDelivery { get; set; } = null!;
         public string Comments { get; set; }
         public int StaffId { get; set; }
-        public string Status { get; set; } = null!;
+        public int Status { get; set; }
         public DateTime OrderDate { get; set; }
         public string CustomerNotes { get; set; }
-        
+
         public virtual Client Client { get; set; } = null!;
+        public virtual StatusDocumentType StatusDocumentType { get; set; } = null;
+
     }
 }

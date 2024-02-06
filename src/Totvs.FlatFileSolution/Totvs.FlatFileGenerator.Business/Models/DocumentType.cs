@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Totvs.FlatFileGenerator.Business.Models;
 
-namespace Totvs.FlatFileGenerator.Data.Entities
+namespace Aldebaran.Application.Services.Models
 {
     public class DocumentType
     {
@@ -9,11 +10,9 @@ namespace Totvs.FlatFileGenerator.Data.Entities
         public string DocumentTypeCode { get; set; }
         // Reverse navigation       
         public ICollection<StatusDocumentType> StatusDocumentTypes { get; set; }
-        public ICollection<ErpDocumentType> ErpDocumentTypes{ get; set; }
-        public ICollection<ShippingProcessDetail> ShippingProcessDetails { get; set; }
 
         public DocumentType()
-        {
+        {            
             StatusDocumentTypes = new List<StatusDocumentType>();
         }
     }

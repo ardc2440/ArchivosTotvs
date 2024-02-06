@@ -9,10 +9,10 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
         public void Configure(EntityTypeBuilder<ShippingProcess> builder)
         {
             builder
-                .ToTable("ERPSHIPPINGPROCESS")
+                .ToTable("erp_shipping_process")
                 .HasKey(k => k.Id);
 
-            builder.Property(e => e.Id).HasColumnName("ID");
+            builder.Property(e => e.Id).HasColumnName("ERP_SHIPPING_PROCESS_ID");
             builder.Property(e => e.Path).HasColumnName("DESTINATIONPATH");
             builder.Property(e => e.Date).HasColumnName("EXECUTIONDATE");
         }

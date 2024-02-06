@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int ShippingProcessId { get; set; }
-        public int DocumentTypeId { get; set; }
+        public short DocumentTypeId { get; set; }
         public int DocumentId { get; set; }        
         public string FileName { get; set; }
         
