@@ -28,7 +28,7 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 
         public async Task CleaningShippingDataProcess(DateTime newCleaningDate, CancellationToken ct)
         {
-            await _cleaningContext.Database.ExecuteSqlRawAsync($"EXECUTE PROCEDURE ERPCLEANINGDATAPROCESS (cast('{newCleaningDate:MM/dd/yyyy HH:mm:ss}' as timestamp));", ct);
+            await _cleaningContext.Database.ExecuteSqlRawAsync($"EXEC SP_ERP_CLEANING_DATA_PROCESS '{newCleaningDate:yyyyMMdd HH:mm:ss}'", ct);
         }
 
         public async Task<IEnumerable<ShippingProcess>> Get(CancellationToken ct = default)

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string OrderNumber { get; set; } = null!;
-        public int Status { get; set; } 
+        public short Status { get; set; } 
 
         public static implicit operator Order(Data.Entities.Order order)
         {

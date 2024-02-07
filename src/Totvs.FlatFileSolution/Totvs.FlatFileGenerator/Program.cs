@@ -54,16 +54,16 @@ internal class Program
         services.Configure<ScheduleSettings>(config.GetSection("ScheduleSettings"));
 
         // Context
-        services.AddDbContext<AldebaranShippingContext>(opts =>
-        {
-            opts.UseFirebird(config.GetConnectionString("AldebaranConnection"));
-        });
 
-        services.AddDbContext<AldebaranCleaningContext>(opts =>
+        services.AddDbContext<AldebaranShippingContext>(options =>
         {
-            opts.UseFirebird(config.GetConnectionString("AldebaranConnection"));
-        });
-
+            options.UseSqlServer(config.GetConnectionString("AldebaranDbConnection"));
+        }, ServiceLifetime.Scoped, ServiceLifetime.Scoped);
+       
+        services.AddDbContext<AldebaranCleaningContext>(options =>
+        {
+            options.UseSqlServer(config.GetConnectionString("AldebaranDbConnection"));
+        }, ServiceLifetime.Scoped, ServiceLifetime.Scoped);
         // Engines
         services.AddSingleton<IFlatFileProcessor, FlatFileProcessor>();
 

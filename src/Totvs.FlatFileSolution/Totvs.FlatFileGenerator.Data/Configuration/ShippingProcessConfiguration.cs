@@ -12,7 +12,7 @@ namespace Totvs.FlatFileGenerator.Data.Configuration
                 .ToTable("erp_shipping_process")
                 .HasKey(k => k.Id);
 
-            builder.Property(e => e.Id).HasColumnName("ERP_SHIPPING_PROCESS_ID");
+            builder.Property(e => e.Id).HasColumnName("ERP_SHIPPING_PROCESS_ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
             builder.Property(e => e.Path).HasColumnName("DESTINATIONPATH");
             builder.Property(e => e.Date).HasColumnName("EXECUTIONDATE");
         }

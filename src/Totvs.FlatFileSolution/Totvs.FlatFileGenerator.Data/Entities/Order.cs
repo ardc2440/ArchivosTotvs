@@ -10,7 +10,7 @@ namespace Totvs.FlatFileGenerator.Data.Entities
         public DateTime DeliveryDate { get; set; }
         public string Comments { get; set; }
         public int StaffId { get; set; }
-        public int Status { get; set; }
+        public short Status { get; set; }
         public DateTime OrderDate { get; set; }
         public string CustomerNotes { get; set; }
 

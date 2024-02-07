@@ -14,13 +14,11 @@ namespace Totvs.FlatFileGenerator.Data.Entities
 
         // Reverse navigation
         public ICollection<Order> CustomerOrders { get; set; }
-        public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
         
         public StatusDocumentType()
         {
             EditMode = true;
-            CustomerOrders = new List<Order>();
-            PurchaseOrders = new List<PurchaseOrder>();
+            CustomerOrders = new List<Order>();         
         }
     }
 }
