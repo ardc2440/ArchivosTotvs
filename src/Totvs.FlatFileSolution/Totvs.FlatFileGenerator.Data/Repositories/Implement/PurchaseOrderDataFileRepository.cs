@@ -19,7 +19,24 @@ namespace Totvs.FlatFileGenerator.Data.Repositories.Implement
 
         public async Task<IEnumerable<PurchaseOrderDataFile>> Get(int purchaseId, CancellationToken ct = default)
         {
-            return await _context.PurchaseOrderDataFiles.Where(w => w.PurchaseId == purchaseId).ToListAsync(ct);
+            return await _context.PurchaseOrderDataFiles
+                    .Where(w => w.PurchaseId == purchaseId)
+                    .Select(s=> new PurchaseOrderDataFile
+                    {
+                        ReferenceCode = s.ReferenceCode,
+                        LineCode = s.LineCode,
+                        ArrivingEstimatedDate = s.ArrivingEstimatedDate,
+                        ItemCode = s.ItemCode,
+                        ProformaNumber = s.ProformaNumber,
+                        ProviderIdentificationNumber = s.ProviderIdentificationNumber,
+                        ProviderIdentificationType = s.ProviderIdentificationType,
+                        PurchaseDetailId = s.PurchaseDetailId,
+                        PurchaseId = s.PurchaseId,
+                        PurchaseNumber = 'W'+s.PurchaseNumber,
+                        Quantity = s.Quantity,
+                        Type= s.Type                           
+                    })
+                    .ToListAsync(ct);
         }
     }
 }
