@@ -30,6 +30,7 @@ namespace Totvs.FlatFileGenerator.Services
         // Cron settings
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
+        private DateTime _lastRun;
 
         internal IEnumerable<SaleOrder> _so { get; set; }
         internal IEnumerable<PurchaseOrder> _po { get; set; }
@@ -81,6 +82,8 @@ namespace Totvs.FlatFileGenerator.Services
         {
             _logger.LogInformation($"Valida existencia de información para envío");
 
+            _lastRun = DateTime.Now;
+
             _so = await _saleOrderService.Get(ct);
             _po = await _purchaseOrderService.Get(ct);
 
@@ -91,7 +94,13 @@ namespace Totvs.FlatFileGenerator.Services
                 return null;
             }
 
-            _flatFileProcessor.ActualShippingProcess = await _shippingProcessService.Add(new ShippingProcess() { Date = DateTime.Now, Path = _flatFileProcessor.FileDirectory() });
+            var soIds = "Pedidos a enviar: " + string.Join(", ", _so.Select(o => $"{o.Type}:{o.Id}"));
+            var poIds = "Ordenes a enviar: " + string.Join(", ", _po.Select(o => $"{o.Type}:{o.Id}"));
+
+            _logger.LogInformation(soIds);
+            _logger.LogInformation(poIds);
+            
+            _flatFileProcessor.ActualShippingProcess = await _shippingProcessService.Add(new ShippingProcess() { Date = _lastRun, Path = _flatFileProcessor.FileDirectory() });
 
             return _flatFileProcessor.ActualShippingProcess;
         }
@@ -112,7 +121,7 @@ namespace Totvs.FlatFileGenerator.Services
 
             _logger.LogInformation($"Generando archivos para Pedidos {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
 
-            var fechaUltProceso = DateTime.Now;
+            var fechaUltProceso = _lastRun;// DateTime.Now;
 
             await _flatFileProcessor.BuildFlatFileAsync(_so, ct);
 
@@ -130,7 +139,7 @@ namespace Totvs.FlatFileGenerator.Services
 
             _logger.LogInformation($"Generando archivos para ordenes de compra {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
 
-            var fechaUltProceso = DateTime.Now;
+            var fechaUltProceso = _lastRun;//DateTime.Now;
 
             await _flatFileProcessor.BuildFlatFileAsync(_po, ct);
 
