@@ -50,7 +50,7 @@ internal class Program
         services.AddSingleton(config);
         services.AddOptions();
 
-        services.Configure<FileSettings>(config.GetSection("FileSettings "));
+        services.Configure<FileSettings>(config.GetSection("FileSettings"));
         services.Configure<ScheduleSettings>(config.GetSection("ScheduleSettings"));
 
         // Context
