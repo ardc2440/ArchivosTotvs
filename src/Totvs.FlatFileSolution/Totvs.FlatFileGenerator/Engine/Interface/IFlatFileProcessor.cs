@@ -10,6 +10,7 @@ namespace Totvs.FlatFileGenerator.Engine.Interface
         ShippingProcess ActualShippingProcess { get; set; }
         Task BuildFlatFileAsync(IEnumerable<SaleOrder> saleOrders, CancellationToken ct = default);
         Task BuildFlatFileAsync(IEnumerable<PurchaseOrder> purchaseOrders, CancellationToken ct = default);
+        Task BuildFlatFileAsync(IEnumerable<InProcessOrder> inProcessOrders, CancellationToken ct = default);
         string FileDirectory();
     }
 }

@@ -139,5 +139,72 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                 }
             }
         }
+
+        public async Task BuildFlatFileAsync(IEnumerable<InProcessOrder> inProcessOrders, CancellationToken ct = default)
+        {
+            foreach (var inProcessOrder in inProcessOrders)
+            {
+                if (!inProcessOrder.Details.Any())
+                    continue;
+                
+                // Usar CodTipoDocumentOrigen y DocumentoOrigen del primer detalle para nombrar el archivo
+                var firstDetail = inProcessOrder.Details.First();
+                var filename = $"INPROCESS_{firstDetail.CodTipoDocumentOrigen}_{firstDetail.DocumentoOrigen}_{inProcessOrder.Date.ToString(Global.DateTimeFormat)}.txt";
+                string destinationPath = Path.Combine(_settings.DestinationFilePath + "\\InProcess", filename);
+
+                try
+                {
+                    _logger.LogInformation($"Generando archivo de traslado en proceso {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
+                    using (var writer = new StreamWriter(destinationPath))
+                    {
+                        // === ESTRUCTURA DEL ARCHIVO INPROCESS ===
+                        // Línea A: Información general del proceso automático de traslado
+                        // Formato: A|NroProceso|TipoDocumentOrigen|DocumentoOrigen|FechaDocumentoOrigen
+                        var group1Data = firstDetail;
+                        await writer.WriteLineAsync($"A|{group1Data.NroProceso}|{group1Data.TipoDocumentOrigen}|{group1Data.DocumentoOrigen}|{group1Data.FechaDocumentoOrigen:yyyyMMdd}");
+                        
+                        // Línea P: Información del pedido asociado al traslado
+                        // Formato: P|CustomerOrderInProcessId|CustomerOrderId|OrderNumber|ClientIdentity|CustomerNotes|InternalNotes
+                        if (group1Data.CustomerOrderId > 0 && !string.IsNullOrEmpty(group1Data.OrderNumber))
+                        {
+                            // Limpiar saltos de línea en CustomerNotes e InternalNotes
+                            string cleanCustomerNotes = (group1Data.CustomerNotes ?? "").Replace("\r", "").Replace("\n", "");
+                            string cleanInternalNotes = (group1Data.InternalNotes ?? "").Replace("\r", "").Replace("\n", "");
+                            await writer.WriteLineAsync($"P|{group1Data.CustomerOrderInProcessId}|{group1Data.CustomerOrderId}|{group1Data.OrderNumber}|{group1Data.ClientIdentity ?? ""}|{cleanCustomerNotes}|{cleanInternalNotes}");
+                        }
+                        
+                        // Líneas D: Detalle de cada ítem/producto incluido en el traslado
+                        // Formato:
+                        // D|Accion Realizada (M: Modificación; X: Borrado; C: Creación)|Id del detalle del Traslado|Id del detalle del pedido|Cantidad del traslado|Código de linea|Referencia Artículo|Referencia
+                        // Ejemplo:
+                        // D|C|92130|93830|20|002|VA-114|03
+                        foreach (var detail in inProcessOrder.Details)
+                        {
+                            if (detail.CustomerOrderDetailId > 0)
+                            {
+                                await writer.WriteLineAsync($"D|{detail.ActionType}|{detail.CustomerOrderInProcessDetailId}|{detail.CustomerOrderDetailId}|{detail.Quantity}|{detail.LineCode ?? ""}|{detail.ItemCode ?? ""}|{detail.ReferenceCode ?? ""}");
+                            }
+                        }
+                    }
+
+                    await _shippingProcessService.Add(new ShippingProcessDetail()
+                    {
+                        ShippingProcessId = ActualShippingProcess.Id,
+                        DocumentTypeId = _lastDocumentTypeProcessService.Find("T", ct).Result.Id,
+                        DocumentId = inProcessOrder.Id,
+                        FileName = filename
+                    });
+
+                    _logger.LogInformation($"Fin generación archivo de traslado en proceso {filename}. {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+                }
+                catch (Exception ex)
+                {
+                    if (File.Exists(destinationPath))
+                        File.Delete(destinationPath);
+                    _logger.LogError(ex, $"Error al ejecutar FlatFileProcessor.BuildFlatFileAsync con excepción '{ex.Message}' para el traslado en proceso {firstDetail.NroProceso}.");
+                }
+            }
+        }
     }
 }

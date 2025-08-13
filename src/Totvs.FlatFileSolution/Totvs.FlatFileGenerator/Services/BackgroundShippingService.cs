@@ -22,6 +22,7 @@ namespace Totvs.FlatFileGenerator.Services
         private readonly ILastDocumentTypeProcessService _lastDocumentTypeProcessService;
         private readonly ISaleOrderService _saleOrderService;
         private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly IInProcessOrderService _inProcessOrderService;
         private readonly IShippingProcessService _shippingProcessService;
 
 
@@ -34,6 +35,7 @@ namespace Totvs.FlatFileGenerator.Services
 
         internal IEnumerable<SaleOrder> _so { get; set; }
         internal IEnumerable<PurchaseOrder> _po { get; set; }
+        internal IEnumerable<InProcessOrder> _ipo { get; set; }
 
         public BackgroundShippingService(ILogger<BackgroundShippingService> logger,
             IOptions<ScheduleSettings> scheduleSettings,
@@ -42,6 +44,7 @@ namespace Totvs.FlatFileGenerator.Services
             ILastDocumentTypeProcessService lastDocumentTypeProcessService,
             ISaleOrderService saleOrderService,
             IPurchaseOrderService purchaseOrderService,
+            IInProcessOrderService inProcessOrderService,
             IShippingProcessService shippingProcessService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(ILogger<BackgroundShippingService>));
@@ -54,8 +57,10 @@ namespace Totvs.FlatFileGenerator.Services
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
             _lastDocumentTypeProcessService = lastDocumentTypeProcessService;
             _purchaseOrderService = purchaseOrderService;
+            _inProcessOrderService = inProcessOrderService;
             _shippingProcessService = shippingProcessService;
         }
+        
         protected override async Task ExecuteAsync(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)
@@ -86,8 +91,9 @@ namespace Totvs.FlatFileGenerator.Services
 
             _so = await _saleOrderService.Get(ct);
             _po = await _purchaseOrderService.Get(ct);
+            _ipo = await _inProcessOrderService.Get(ct);
 
-            if (!_so.Any() && !_po.Any())
+            if (!_so.Any() && !_po.Any() && !_ipo.Any())
             {
                 _logger.LogInformation($"no existe informacion para envío");
 
@@ -96,9 +102,11 @@ namespace Totvs.FlatFileGenerator.Services
 
             var soIds = "Pedidos a enviar: " + string.Join(", ", _so.Select(o => $"{o.Type}:{o.Id}"));
             var poIds = "Ordenes a enviar: " + string.Join(", ", _po.Select(o => $"{o.Type}:{o.Id}"));
+            var ipoIds = "Traslados en proceso a enviar: " + string.Join(", ", _ipo.Select(o => $"{o.Type}:{o.Id}"));
 
             _logger.LogInformation(soIds);
             _logger.LogInformation(poIds);
+            _logger.LogInformation(ipoIds);
             
             _flatFileProcessor.ActualShippingProcess = await _shippingProcessService.Add(new ShippingProcess() { Date = _lastRun, Path = _flatFileProcessor.FileDirectory() });
 
@@ -112,6 +120,7 @@ namespace Totvs.FlatFileGenerator.Services
 
             await ProcessAsyncSalesOrders(ct);
             await ProcessAsyncPurchaseOrders(ct);
+            await ProcessAsyncInProcessOrders(ct);
         }
 
         async Task ProcessAsyncSalesOrders(CancellationToken ct)
@@ -149,6 +158,23 @@ namespace Totvs.FlatFileGenerator.Services
 
             _logger.LogInformation($"Finaliza generación de archivos para ordenes de compra {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
 
+        }
+        async Task ProcessAsyncInProcessOrders(CancellationToken ct)
+        {
+            if (!_ipo.Any())
+                return;
+
+            _logger.LogInformation($"Generando archivos para Traslados en Proceso {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+
+            var fechaUltProceso = _lastRun;
+
+            await _flatFileProcessor.BuildFlatFileAsync(_ipo, ct);
+
+            var lastDocumentTypeProcess = await _lastDocumentTypeProcessService.Find("T", ct);
+            lastDocumentTypeProcess.LastExecutionDate = fechaUltProceso;
+            await _lastDocumentTypeProcessService.Update(lastDocumentTypeProcess, ct);
+
+            _logger.LogInformation($"Finaliza generación de archivos para Traslados en Proceso {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
         }
     }
 }

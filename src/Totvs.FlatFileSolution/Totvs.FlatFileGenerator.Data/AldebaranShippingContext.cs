@@ -21,6 +21,8 @@ namespace Totvs.FlatFileGenerator.Data
             modelBuilder.ApplyConfiguration(new PurchaseOrderDataFileConfiguration());
             modelBuilder.ApplyConfiguration(new SaleOrderConfiguration());
             modelBuilder.ApplyConfiguration(new SaleOrderDataFileConfiguration());
+            modelBuilder.ApplyConfiguration(new InProcessOrderConfiguration());
+            modelBuilder.ApplyConfiguration(new InProcessOrderDataFileConfiguration());
             modelBuilder.ApplyConfiguration(new ShippingProcessConfiguration());
             modelBuilder.ApplyConfiguration(new ShippingProcessDetailConfiguration());
             modelBuilder.ApplyConfiguration(new DocumentTypeConfiguration());
@@ -34,8 +36,10 @@ namespace Totvs.FlatFileGenerator.Data
         public DbSet<ErpDocumentType> ErpDocumentTypes => Set<ErpDocumentType>();
         public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
         public DbSet<SaleOrder> SaleOrders => Set<SaleOrder>();
+        public DbSet<InProcessOrder> InProcessOrders => Set<InProcessOrder>();
         public DbSet<PurchaseOrderDataFile> PurchaseOrderDataFiles => Set<PurchaseOrderDataFile>();
         public DbSet<SaleOrderDataFile> SaleOrderDataFiles => Set<SaleOrderDataFile>();
+        public DbSet<InProcessOrderDataFile> InProcessOrderDataFiles => Set<InProcessOrderDataFile>();
         public DbSet<ShippingProcess> ShippingProcesses => Set<ShippingProcess>();
         public DbSet<ShippingProcessDetail> ShippingProcessDetails => Set<ShippingProcessDetail>();
         public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
