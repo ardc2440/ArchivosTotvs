@@ -150,7 +150,7 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
                 // Usar CodTipoDocumentOrigen y DocumentoOrigen del primer detalle para nombrar el archivo
                 var firstDetail = inProcessOrder.Details.First();
                 var filename = $"INPROCESS_{firstDetail.CodTipoDocumentOrigen}_{firstDetail.DocumentoOrigen}_{inProcessOrder.Date.ToString(Global.DateTimeFormat)}.txt";
-                string destinationPath = Path.Combine(_settings.DestinationFilePath + "\\InProcess", filename);
+                string destinationPath = Path.Combine(_settings.DestinationFilePath + "\\Backorder", filename);
 
                 try
                 {
