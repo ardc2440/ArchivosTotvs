@@ -158,32 +158,28 @@ namespace Totvs.FlatFileGenerator.Engine.Implement
 
                     using (var writer = new StreamWriter(destinationPath))
                     {
-                        // === ESTRUCTURA DEL ARCHIVO INPROCESS ===
-                        // Línea A: Información general del proceso automático de traslado
-                        // Formato: A|NroProceso|TipoDocumentOrigen|DocumentoOrigen|FechaDocumentoOrigen
+                        // Línea A: Información general del proceso automático de traslado (SOLO UNA VEZ)
                         var group1Data = firstDetail;
                         await writer.WriteLineAsync($"A|{group1Data.NroProceso}|{group1Data.TipoDocumentOrigen}|{group1Data.DocumentoOrigen}|{group1Data.FechaDocumentoOrigen:yyyyMMdd}");
                         
-                        // Línea P: Información del pedido asociado al traslado
-                        // Formato: P|CustomerOrderInProcessId|CustomerOrderId|OrderNumber|ClientIdentity|CustomerNotes|InternalNotes
-                        if (group1Data.CustomerOrderId > 0 && !string.IsNullOrEmpty(group1Data.OrderNumber))
-                        {
-                            // Limpiar saltos de línea en CustomerNotes e InternalNotes
-                            string cleanCustomerNotes = (group1Data.CustomerNotes ?? "").Replace("\r", "").Replace("\n", "");
-                            string cleanInternalNotes = (group1Data.InternalNotes ?? "").Replace("\r", "").Replace("\n", "");
-                            await writer.WriteLineAsync($"P|{group1Data.CustomerOrderInProcessId}|{group1Data.CustomerOrderId}|{group1Data.OrderNumber}|{group1Data.ClientIdentity ?? ""}|{cleanCustomerNotes}|{cleanInternalNotes}");
-                        }
+                        // Agrupar los detalles por CustomerOrderInProcessId para escribir una línea P y sus D asociadas
+                        var pedidosAgrupados = inProcessOrder.Details
+                            .Where(d => d.CustomerOrderId > 0 && !string.IsNullOrEmpty(d.OrderNumber))
+                            .GroupBy(d => d.CustomerOrderInProcessId);
                         
-                        // Líneas D: Detalle de cada ítem/producto incluido en el traslado
-                        // Formato:
-                        // D|Accion Realizada (M: Modificación; X: Borrado; C: Creación)|Id del detalle del Traslado|Id del detalle del pedido|Cantidad del traslado|Código de linea|Referencia Artículo|Referencia
-                        // Ejemplo:
-                        // D|C|92130|93830|20|002|VA-114|03
-                        foreach (var detail in inProcessOrder.Details)
+                        foreach (var grupoPedido in pedidosAgrupados)
                         {
-                            if (detail.CustomerOrderDetailId > 0)
+                            var pedidoData = grupoPedido.First();
+                            string cleanCustomerNotes = (pedidoData.CustomerNotes ?? "").Replace("\r", "").Replace("\n", "");
+                            string cleanInternalNotes = (pedidoData.InternalNotes ?? "").Replace("\r", "").Replace("\n", "");
+                            await writer.WriteLineAsync($"P|{pedidoData.CustomerOrderInProcessId}|{pedidoData.CustomerOrderId}|{pedidoData.OrderNumber}|{pedidoData.ClientIdentity ?? ""}|{cleanCustomerNotes}|{cleanInternalNotes}");
+                            // Líneas D asociadas a este pedido
+                            foreach (var detail in grupoPedido)
                             {
-                                await writer.WriteLineAsync($"D|{detail.ActionType}|{detail.CustomerOrderInProcessDetailId}|{detail.CustomerOrderDetailId}|{detail.Quantity}|{detail.LineCode ?? ""}|{detail.ItemCode ?? ""}|{detail.ReferenceCode ?? ""}");
+                                if (detail.CustomerOrderDetailId > 0)
+                                {
+                                    await writer.WriteLineAsync($"D|{detail.ActionType}|{detail.CustomerOrderInProcessDetailId}|{detail.CustomerOrderDetailId}|{detail.Quantity}|{detail.LineCode ?? ""}|{detail.ItemCode ?? ""}|{detail.ReferenceCode ?? ""}");
+                                }
                             }
                         }
                     }

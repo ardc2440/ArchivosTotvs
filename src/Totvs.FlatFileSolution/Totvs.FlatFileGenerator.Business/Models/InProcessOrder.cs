@@ -6,6 +6,7 @@ namespace Totvs.FlatFileGenerator.Business.Models
     public class InProcessOrder
     {
         public int Id { get; set; }
+        public int CustomerOrderInProcessId { get; set; }
         public string Type { get; set; }
         public DateTime Date { get; set; }
         public IEnumerable<InProcessOrderDetail> Details { get; set; }

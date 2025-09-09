@@ -36,6 +36,7 @@ namespace Totvs.FlatFileGenerator.Business.Services.Implement
                 var inProcessOrder = new InProcessOrder
                 {
                     Id = firstRecord.NroProceso,
+                    CustomerOrderInProcessId = firstRecord.CustomerOrderInProcessId,
                     Type = "T", // Tipo de documento para traslados
                     Date = firstRecord.FechaDocumentoOrigen,
                     Details = processGroup.Select(d => (InProcessOrderDetail)d).ToList()
